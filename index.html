@@ -727,44 +727,48 @@
       location.reload();
     }
 
+
 function submitQuiz() {
-  const totalQuestions = 85;
+  const totalQuestions = 85; // total number of questions
   let correctCount = 0;
+  let wrongCount = 0;
 
   document.querySelectorAll('.question-block').forEach(block => {
     const qid = block.id;
     const correct = answered[qid]?.correct;
     const selected = answered[qid]?.selected;
 
-    // Show all options for current question
     const options = block.querySelectorAll('.option');
-
     options.forEach(opt => {
       const optVal = opt.getAttribute('data-opt');
       const icon = opt.querySelector('.icon');
 
       if (optVal === correct) {
-        // Always show correct answer in green ✅
         opt.classList.add('correct');
         icon.textContent = '✅';
       }
 
-      // If selected and incorrect, keep it red ❌
       if (optVal === selected && selected !== correct) {
         opt.classList.add('wrong');
         icon.textContent = '❌';
       }
     });
 
-    // Count correct
-    if (selected === correct) {
-      correctCount++;
+    if (selected) {
+      if (selected === correct) {
+        correctCount++;
+      } else {
+        wrongCount++;
+      }
     }
   });
 
   const scorePercent = ((correctCount / totalQuestions) * 100).toFixed(2);
   const scoreBox = document.getElementById('score-box');
-  scoreBox.textContent = `🎯 You answered ${correctCount} out of ${totalQuestions} correctly. (${scorePercent}%)`;
+  scoreBox.innerHTML = `
+    🎯 You answered <strong>${correctCount}</strong> correctly and <strong>${wrongCount}</strong> incorrectly out of ${totalQuestions} questions. <br>
+    🧮 Your score: <strong>${scorePercent}%</strong>
+  `;
 }
   </script>
 </body>
